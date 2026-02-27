@@ -49,8 +49,27 @@ namespace TMS_2_with_middleware
 
             app.UseAuthorization();
 
+            app.Use(async (context, next) =>
+            {
+                Console.WriteLine("Inline Middleware test");
+                await next();
+                Console.WriteLine("After response!");
+            });
+
             app.MapControllers();
 
+
+            // you must have 2 app.Run, the one with the middleware and the normal one
+            // this is a fallback response, shows when no controller is available to serve the current endpoint
+            // instead of a generic 404
+            app.Run(async (context) =>
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync("No Endpoint to Serve this!");
+            });
+
+            // this is the actual start point of the app, you cannot just replace it with the above one
+            // my app didn't run before I added this back
             app.Run();
         }
     }
