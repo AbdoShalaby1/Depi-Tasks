@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using TMS_2_with_middleware.Context;
+using TMS_2_with_middleware.Middleware;
 using TMS_2_with_middleware.Models;
 using TMS_2_with_middleware.Repositories;
 
@@ -55,6 +56,7 @@ namespace TMS_2_with_middleware
                 await next();
                 Console.WriteLine("After response!");
             });
+            app.UseCustomMiddleware();
 
             app.MapControllers();
 
